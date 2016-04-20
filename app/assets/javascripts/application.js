@@ -17,4 +17,5 @@
 //= require angular-ui-router
 //= require angular-bootstrap
 //= require angular-rails-templates
+//= require angular-local-storage
 //= require_tree .

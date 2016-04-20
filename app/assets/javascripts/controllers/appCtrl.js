@@ -8,17 +8,15 @@ mainModule.controller('AppCtrl', [
 
         var loadJoke = function() {
             jokeServices.getNextJoke()
-                .then(function(success) {
-                    $log.info(success);
-                    // $scope.listOfJokes = success.jokes;
-                    $scope.content = success;
+                .then(function(joke) {
+                    $log.info(joke);
+                    $scope.content = joke;
                 }, function(error) {
                     $log.info(error);
                 });
         };
 
         loadJoke();
-
 
         $scope.like = function(id) {
             jokeServices.updateJoke(id, 1)

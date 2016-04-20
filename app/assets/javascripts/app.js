@@ -4,7 +4,8 @@ var mainModule = angular.module('futureWorkz', [
     'ngTouch',
     'ui.router',
     'ui.bootstrap',
-    'templates'
+    'templates',
+    'LocalStorageModule'
 ]);
 
 // mainModule.config(function($httpProvider) {
@@ -24,3 +25,10 @@ mainModule.config([
         $urlRouterProvider.otherwise('/app');
     }
 ]);
+
+mainModule.config(function(localStorageServiceProvider) {
+    localStorageServiceProvider
+        .setPrefix('futureWorkzTest')
+        // .setStorageType('sessionStorage')
+        .setNotify(true, true);
+});

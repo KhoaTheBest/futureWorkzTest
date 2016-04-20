@@ -60,7 +60,7 @@ Rails.application.routes.draw do
         namespace :v1 do
             resources :jokes, only: [:update], defaults: { format: :json } do
                 collection do
-                    get 'nextJoke' => 'jokes#get_next_joke'
+                    post 'nextJoke' => 'jokes#get_next_joke'
                 end
             end
         end

@@ -5,12 +5,28 @@ var UPDATE_JOKE = '/api/v1/jokes/:id';
 mainModule.service('JokeServices', [
     '$http',
     '$q',
-    function($http, $q) {
+    '$log',
+    'localStorageService',
+    function($http, $q, $log, localStorageService) {
         this.getNextJoke = function() {
             var deferred = $q.defer();
+            var listOfReadJokes = "";
 
-            $http.get(GET_NEXT_JOKES).then(function(success) {
-                deferred.resolve(success.data);
+            if (localStorageService.cookie.get('readJokeIds')) {
+                listOfReadJokes = localStorageService.cookie.get('readJokeIds');
+            }
+
+            $http.post(GET_NEXT_JOKES, {
+                joke: {
+                    read_jokes: listOfReadJokes
+                }
+            }).then(function(success) {
+                deferred.resolve(success.data.joke);
+
+                if(success.data.joke.id) {
+                  listOfReadJokes += success.data.joke.id + ","
+                  localStorageService.cookie.set("readJokeIds", listOfReadJokes);
+                }
             }, function(error) {
                 deferred.reject(error.data);
             });
@@ -19,19 +35,19 @@ mainModule.service('JokeServices', [
         };
 
         this.updateJoke = function(id, action) {
-          var deferred = $q.defer();
+            var deferred = $q.defer();
 
-          $http.put(UPDATE_JOKE.replace(':id', id),{
-            joke: {
-              doAction: action
-            }
-          }).then(function(success) {
-              deferred.resolve(success.data);
-          }, function(error) {
-              deferred.reject(error.data);
-          });
+            $http.put(UPDATE_JOKE.replace(':id', id), {
+                joke: {
+                    doAction: action
+                }
+            }).then(function(success) {
+                deferred.resolve(success.data);
+            }, function(error) {
+                deferred.reject(error.data);
+            });
 
-          return deferred.promise;
+            return deferred.promise;
         };
     }
 ]);
